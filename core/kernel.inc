@@ -62,4 +62,22 @@ native ">", greater
 .greater:
 	push 1
 
+native "not", bit_not
+	pop rax
+	not rax
+	push rax
+
+native "and", bit_and
+	pop rax
+	pop rdx
+	and rdx, rax
+	push rax
+
+native "or", bit_or
+	pop rax,
+	pop rdx,
+	or rdx, rax
+	push rax
+
+
 
