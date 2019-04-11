@@ -4,12 +4,12 @@ native "drop", drop
 
 native "swap", swap
 	pop rax
-	xchg [rsp]
+	xchg [rsp], rax
 	push rax
 	jmp next
 
 native "dup", dup
-	push [rsp]
+	push qword[rsp]
 	jmp next
 
 native "+", plus
@@ -19,7 +19,7 @@ native "+", plus
 
 native "*", mul
 	pop rax
-	mul [rsp]
+	mul qword[rsp]
 	pop rdx
 	push rax
 	jmp next
