@@ -122,3 +122,17 @@ native "land", land
 	push 0
 	jmp next
 
+native ">r", push_to_r
+	pop rax
+	rpush rax
+	jmp next
+
+native "r>", pop_from_r
+	rpop rax
+	push rax
+	jmp next
+
+native "r@", fetch_r
+	push qword[rstack]
+	jmp next
+
