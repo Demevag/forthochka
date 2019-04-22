@@ -136,3 +136,35 @@ native "r@", fetch_r
 	push qword[rstack]
 	jmp next
 
+native "@", fetch
+	pop rax
+	push qword[rax]
+	jmp next
+
+;(val adr - )
+native "!", store
+	pop rax	
+	pop rdx
+	mov [rax], rdx
+	jmp next
+
+native "c!", store_char
+	pop rdx
+	pop rax
+	push [rdx], al
+	jmp next
+
+native "c@", fetch_char
+	pop rax
+	push byte[rax]
+	jmp next
+	
+native "execute", execute
+	pop rax
+	mov w, rax
+	jmp [rax]
+
+native "forth-dp", forth_dp
+	push dp
+	jmp next
+
