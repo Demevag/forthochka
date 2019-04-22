@@ -168,3 +168,26 @@ native "forth-dp", forth_dp
 	push dp
 	jmp next
 
+native "docol", docol
+	rpush pc
+	add w, 8
+	mov pc, w
+	jmp next
+
+native "branch", branch
+	mov pc, [pc]
+	jmp next
+
+native "0branch", branch0
+	pop rax
+	test rax,rax
+	jnz .skip
+	mov pc, [pc]
+	jmp next
+.skip:
+	add pc, 8
+	jmp next
+
+native "exit", exit
+	rpop pc
+	jmp next
