@@ -1,3 +1,4 @@
+; Stack commands
 native "drop", drop
 	pop rax
 	jmp next
@@ -12,6 +13,7 @@ native "dup", dup
 	push qword[rsp]
 	jmp next
 
+;Arithmetic operators
 native "+", plus
 	pop rax
 	add [rsp], rax
@@ -76,6 +78,7 @@ native ">", greater
 	push 1
 	jmp next
 
+;Logic operators
 native "not", bit_not
 	pop rax
 	not rax
@@ -122,6 +125,7 @@ native "land", land
 	push 0
 	jmp next
 
+;Return stack commands
 native ">r", push_to_r
 	pop rax
 	rpush rax
@@ -136,6 +140,7 @@ native "r@", fetch_r
 	push qword[rstack]
 	jmp next
 
+;Memory commands
 native "@", fetch
 	pop rax
 	push qword[rax]
@@ -168,6 +173,7 @@ native "forth-dp", forth_dp
 	push dp
 	jmp next
 
+;Execution management commands
 native "docol", docol
 	rpush pc
 	add w, 8
@@ -192,6 +198,7 @@ native "exit", exit
 	rpop pc
 	jmp next
 
+;Service commands
 native "lit", lit
 	push qword[pc]
 	add pc, 8
@@ -219,3 +226,21 @@ native "syscall", syscall
 	push rax
 	push rdx
 	jmp next
+
+native "..", show_stack
+	mov rcx, rsp
+.loop:
+	 cmp rcx, [stack_start] 
+     jae next
+     mov rdi, [rcx]
+     push rcx
+     call print_int
+     call print_newline
+     pop rcx
+     add rcx, 8
+     jmp .loop
+
+native "forth-stack-restore", forth_stack_restore
+  mov rsp, [stack_start]
+  jmp next
+

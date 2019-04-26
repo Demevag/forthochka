@@ -1,4 +1,5 @@
 global _start
+%include "util.inc"
 %include "macro.inc"
 
 %define pc r15		;next command pointer
@@ -8,7 +9,8 @@ global _start
 section .text
 
 %include "kernel.inc"
-;%include "words.inc" ;implement later
+%include "interpreter.inc"
+%include "forth-utils.inc"
 
 section .bss
 
@@ -30,7 +32,7 @@ _start:
 	mov rstack, rstack_start
 	mov [stack_start], rsp
 
-	mov pc, program
+	mov pc, forth_init
 
 next:
 	mov w, pc
