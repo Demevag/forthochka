@@ -156,12 +156,13 @@ native "!", store
 native "c!", store_char
 	pop rdx
 	pop rax
-	push [rdx], al
+	mov [rdx], al
 	jmp next
 
 native "c@", fetch_char
 	pop rax
-	push byte[rax]
+	movzx rax,  byte[rax]
+	push rax
 	jmp next
 	
 native "execute", execute
