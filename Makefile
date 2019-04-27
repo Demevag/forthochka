@@ -14,7 +14,7 @@ objects/forthochka.o:	core/forthochka.asm core/macro.inc core/interpreter.inc co
 
 objects/util.o: core/util.inc core/util.asm
 	mkdir -p objects
-	$(ASM) $(ASMFLAGS) core/util.asm -o objects/util.o
+	$(ASM) $(ASM_FLAGS) core/util.asm -o objects/util.o
 
 clean:
 	rm -rf bin objects
