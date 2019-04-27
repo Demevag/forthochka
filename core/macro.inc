@@ -22,19 +22,14 @@ dq i_ %+ %2
 %endmacro
 
 %macro colon 3
-section .data
-	wh_%+ %2 : dq_lw
-	db 0
-	db %1, 0
-	sb %3
-%define _lw wh%+ %2
-xt_%+ %2 :
-	dq i_%+ %2
-
-section .text
-i_%+ %2:
-	dq docol
-
+section .data 
+    wh_ %+ %2 : dq _lw
+    %define _lw wh_ %+ %2 
+    db 0  ; to mark the name start
+    str_ %+ %2:
+    db %1, 0
+    db %3
+    xt_ %+ %2 : dq i_docol
 %endmacro
 
 %macro colon 2

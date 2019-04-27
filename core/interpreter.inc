@@ -23,7 +23,7 @@ colon "forth-dict-word-name", forth_dict_word_name
   dq xt_lit, 9, xt_plus, xt_exit
 
 colon "forth-find-word", forth_find_word
-  dq xt_to_r, xt_last_word, xt_fetch
+  dq xt_push_to_r, xt_last_word, xt_fetch
   dq xt_state, xt_fetch
   branch0 .loop
   dq xt_fetch
@@ -31,7 +31,7 @@ colon "forth-find-word", forth_find_word
   dq xt_dup
   branch0 .not_found
 
-  dq xt_dup, xt_forth_dict_word_name, xt_r_fetch, xt_string_equals, xt_not
+  dq xt_dup, xt_forth_dict_word_name, xt_fetch_r, xt_string_equals, xt_bit_not
   branch0 .found
 
   dq xt_fetch
@@ -39,7 +39,7 @@ colon "forth-find-word", forth_find_word
 .found:
   dq xt_lit, 1
 .not_found:
-  dq xt_from_r, xt_drop, xt_exit
+  dq xt_pop_from_r, xt_drop, xt_exit
 
 colon "'", forth_tick, 1
   dq xt_fd, xt_fetch, xt_lit, word_buf, xt_file_read_word
@@ -65,22 +65,22 @@ colon "forth-cfa", forth_cfa
 colon "forth-create", forth_create
   dq xt_here, xt_fetch                ; word start
   dq xt_last_word, xt_fetch, xt_comma ; fill `link`
-  dq xt_last_word, xt_write           ; update `last_word`
+  dq xt_last_word, xt_store           ; update `last_word`
   dq xt_lit, 0, xt_char_comma
   dq xt_dup, xt_here, xt_fetch, xt_swap, xt_string_copy
-  dq xt_string_length, xt_here, xt_fetch, xt_plus, xt_inc, xt_here, xt_write
+  dq xt_string_length, xt_here, xt_fetch, xt_plus, xt_inc, xt_here, xt_store
   dq xt_char_comma
   dq xt_exit
 
 colon "forth-follows-branch", forth_follows_branch
-    dq xt_here, xt_fetch, xt_lit, 8, xt_minus, xt_fetch
-    dq xt_dup, xt_lit, xt_branch0, xt_equals, xt_swap
-    dq xt_lit, xt_branch, xt_equals, xt_lor, xt_exit
+    dq xt_here, xt_fetch, xt_lit, 8, xt_sub, xt_fetch
+    dq xt_dup, xt_lit, xt_branch0, xt_equal, xt_swap
+    dq xt_lit, xt_branch, xt_equal, xt_lor, xt_exit
 
 ; (  fd -- )
 colon "forth-interpret-fd", forth_interpret_fd
-    dq xt_lit, xt_fd, xt_fetch, xt_to_r
-    dq xt_fd, xt_write
+    dq xt_lit, xt_fd, xt_fetch, xt_push_to_r
+    dq xt_fd, xt_store
 
     .loop:
     dq xt_fd, xt_fetch, xt_lit, word_buf, xt_file_read_word
@@ -91,10 +91,10 @@ colon "forth-interpret-fd", forth_interpret_fd
     branch .loop
 
     .eof:
-    dq xt_from_r, xt_fd, xt_write, xt_exit
+    dq xt_pop_from_r, xt_fd, xt_store, xt_exit
 
 colon "forth-xt-is-immediate", forth_xt_is_immediate
-    dq xt_lit, 1, xt_minus, xt_fetch_char, xt_exit
+    dq xt_lit, 1, xt_sub, xt_fetch_char, xt_exit
 
 ; ( str - )
 colon "forth-interpret", forth_interpret
@@ -108,7 +108,7 @@ colon "forth-interpret", forth_interpret
     dq xt_state, xt_fetch
     branch0 .interpreting
 
-    dq xt_dup, xt_forth_xt_is_immediate, xt_not
+    dq xt_dup, xt_forth_xt_is_immediate, xt_bit_not
     branch0 .interpreting
 
 .compiling:
@@ -125,7 +125,7 @@ colon "forth-interpret", forth_interpret
     dq xt_state, xt_fetch                  ; if interpreting, that's it
     branch0 .exit
 
-    dq xt_forth_follows_branch, xt_not
+    dq xt_forth_follows_branch, xt_bit_not
     branch0 .is_branch
 
 .not_branch:
