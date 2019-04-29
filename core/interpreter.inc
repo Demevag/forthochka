@@ -1,6 +1,7 @@
 section .rodata
 msg:
   .no_such_word: db "! No such word: ", 0
+  .test: db "3",0
 
 section .bss
 word_buf:  resq 512

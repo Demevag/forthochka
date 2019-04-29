@@ -1,6 +1,6 @@
 ; Stack commands
 native "drop", drop
-	pop rax
+	add rsp, 8
 	jmp next
 
 native "swap", swap
@@ -57,8 +57,8 @@ native "=", equal
 	jmp next
 
 native "<", less
-	pop rax
 	pop rdx
+	pop rax
 	cmp rax, rdx
 	jl .less
 	push 0
@@ -68,8 +68,8 @@ native "<", less
 	jmp next
 
 native ">", greater
-	pop rax
 	pop rdx
+	pop rax
 	cmp rax, rdx
 	jg .greater
 	push 0
@@ -81,8 +81,10 @@ native ">", greater
 ;Logic operators
 native "not", bit_not
 	pop rax
-	not rax
-	push rax
+    test rax, rax
+    setz al
+    movzx rax, al
+    push rax	
 	jmp next
 
 native "and", bit_and
@@ -102,9 +104,9 @@ native "or", bit_or
 native "lor", lor
 	pop rax
 	pop rdx
-	cmp rax, rax
+	test rax, rax
 	jnz .true
-	cmp rdx, rdx
+	test rdx, rdx
 	jnz .true
 	push 0
 	jmp next
@@ -115,9 +117,9 @@ native "lor", lor
 native "land", land
 	pop rax
 	pop rdx
-	cmp rax, rax
+	test rax, rax
 	jz .false
-	cmp rdx, rdx
+	test rdx, rdx
 	jz .false
 	push 1
 	jmp next
