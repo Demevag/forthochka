@@ -38,6 +38,37 @@ colon "file-write-char", file_write_char
   dq xt_stack_cell, xt_dup, xt_pop_from_r, xt_swap, xt_store_char
   dq xt_pop_from_r, xt_swap, xt_lit, 1, xt_sys_write, xt_drop, xt_drop, xt_exit
 
+ ;( char - )
+colon "print-char", print_char
+	dq xt_lit, 1, xt_swap, xt_file_write_char, xt_exit
+
+colon "digit-to-char", digit_to_char
+	dq xt_lit, 0x30, xt_plus, xt_exit
+
+colon "print-uint", print_uint
+	dq xt_push_to_r
+	dq xt_forth_sp
+	dq xt_pop_from_r, xt_swap
+	dq xt_push_to_r, xt_push_to_r
+.loop:
+	dq xt_fetch_r
+   	dq xt_lit, 10, xt_div_rem
+	dq xt_pop_from_r
+	dq xt_lit, 10, xt_div
+	dq xt_dup
+	branch0 .print
+	dq xt_push_to_r
+	branch .loop
+.print:
+	dq xt_drop
+.print_loop:
+	dq xt_forth_sp, xt_fetch_r, xt_less
+	branch0 .exit
+	dq xt_digit_to_char, xt_print_char
+	branch .print_loop
+.exit:
+	dq xt_pop_from_r, xt_drop, xt_exit
+
 colon "string-length", string_length
       dq xt_dup
 .loop:
@@ -217,3 +248,16 @@ colon "string-parse-number", string_parse_number
 .error:
   dq xt_drop, xt_lit, 0, xt_exit
 
+colon "..", show_stack_s
+	dq  xt_forth_sp
+	dq xt_push_to_r
+.loop:
+	dq xt_fetch_r, xt_forth_stack_base, xt_less
+	branch0 .exit
+	dq xt_fetch_r, xt_fetch, xt_print_uint, xt_print_cr
+	dq xt_pop_from_r
+	dq xt_lit, 8, xt_plus
+	dq xt_push_to_r
+	branch .loop
+.exit:
+	dq xt_pop_from_r, xt_drop, xt_exit

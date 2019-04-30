@@ -29,6 +29,7 @@ native "*", mul
 native "/", div
 	pop rcx
 	pop rax
+	cqo
 	div rcx
 	push rax
 	jmp next
@@ -36,6 +37,7 @@ native "/", div
 native "%", div_rem
 	pop rcx
 	pop rax
+	cqo
 	div rcx
 	push rdx
 	jmp next
@@ -212,7 +214,7 @@ native "forth-sp", forth_sp
 	jmp next
 
 native "forth-stack-base", forth_stack_base
-	push stack_start
+	push qword[stack_start]
 	jmp next
 
 ;( call_num a1 a2 a3 a4 a5 a6 -- new_rax new_rdx )
@@ -229,19 +231,6 @@ native "syscall", syscall
 	push rax
 	push rdx
 	jmp next
-
-native "..", show_stack
-	mov rcx, rsp
-.loop:
-	 cmp rcx, [stack_start] 
-     jae next
-     mov rdi, [rcx]
-     push rcx
-     call print_int
-     call print_newline
-     pop rcx
-     add rcx, 8
-     jmp .loop
 
 native "forth-stack-restore", forth_stack_restore
   mov rsp, [stack_start]

@@ -1,5 +1,4 @@
 global _start
-%include "util.inc"
 %include "macro.inc"
 
 %define pc r15		;next command pointer
