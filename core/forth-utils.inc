@@ -95,6 +95,7 @@ colon "char-is-space", char_is_space
   dq xt_fetch_r, xt_lit,  ' ', xt_equal
   dq xt_fetch_r, xt_lit, 10, xt_equal, xt_lor
   dq xt_fetch_r, xt_lit, 13, xt_equal, xt_lor
+  dq xt_fetch_r, xt_lit, 9, xt_equal, xt_lor
   dq xt_pop_from_r,  xt_lit, '\t', xt_equal, xt_lor, xt_exit
 
   ; ( addr - )
